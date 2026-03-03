@@ -54,7 +54,7 @@ export default function VariableDetailPage() {
   return (
     <article className="variable-detail">
       <nav aria-label="Хлібні крихти">
-        <Link to="/variables">Variables</Link>
+        <Link to="/variables">Змінні</Link>
         <span className="breadcrumb-sep"> / </span>
         <span>{variable.Name}</span>
       </nav>

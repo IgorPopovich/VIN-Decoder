@@ -8,7 +8,7 @@ export default function Layout() {
           <NavLink to="/" className="layout-brand" end>
             VIN Decoder
           </NavLink>
-          <NavLink className="variables-nav" to="/variables">Variables</NavLink>
+          <NavLink className="variables-nav" to="/variables">Змінні</NavLink>
         </nav>
       </header>
       <main className="layout-main">

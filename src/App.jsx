@@ -7,7 +7,7 @@ import './App.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/VIN-Decoder">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />

@@ -1,16 +1,62 @@
-# React + Vite
+# VIN Decoder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Вебзастосунок для розшифровки автомобільних VIN-кодів та перегляду описів змінних через API NHTSA.
 
-Currently, two official plugins are available:
+**Розгорнутий застосунок:** [https://igorpopovich.github.io/VIN-Decoder/](https://igorpopovich.github.io/VIN-Decoder/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Опис функціоналу
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Головна сторінка (/)**  
+  Форма введення VIN (до 17 символів, латинські літери крім I, O, Q та цифри). Валідація на місці. Після запиту — список результатів розшифровки (Variable та Value). Історія трьох останніх розшифрованих VIN; клік по елементу історії знову показує його результати.
 
-## Expanding the ESLint configuration
+- **Сторінка «Змінні» (/variables)**  
+  Список усіх змінних API з короткими описами та посиланнями на деталі.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Сторінка змінної (/variables/:id)**  
+  Повний опис обраної змінної (назва, група, тип даних, опис).
+
+Використовується відкритий API: [NHTSA vPIC](https://vpic.nhtsa.dot.gov/api/) (Decode VIN та Get Vehicle Variables List).
+
+---
+
+## Локальний запуск
+
+### Що потрібно
+
+- Node.js (рекомендовано LTS)
+- npm
+
+### Кроки
+
+1. Клонувати репозиторій:
+   ```bash
+   git clone https://github.com/igorpopovich/VIN-Decoder.git
+   cd VIN-Decoder
+   ```
+
+2. Встановити залежності:
+   ```bash
+   npm install
+   ```
+
+3. Запустити режим розробки:
+   ```bash
+   npm run dev
+   ```
+
+4. Відкрити в браузері адресу, яку покаже Vite (зазвичай `http://localhost:5173`).
+
+### Інші команди
+
+- `npm run build` — збірка для продакшену (результат у папці `dist`)
+- `npm run preview` — перегляд збірки локально
+- `npm run deploy` — збірка та публікація на GitHub Pages (гілка `gh-pages`)
+
+---
+
+## Стек
+
+- React 19, Vite 7, React Router 7.  
+- Верстка без UI-фреймворків, семантична розмітка, підтримка роздільності 420–1440 px.
