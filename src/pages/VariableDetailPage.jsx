@@ -1,40 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getVehicleVariableList } from '../api/vinApi';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchVehicleVariables,
+  selectVariableById,
+  selectVariablesError,
+  selectVariablesMessage,
+  selectVariablesStatus,
+} from '../store/variablesSlice';
 
 export default function VariableDetailPage() {
   const { variableId } = useParams();
-  const [variable, setVariable] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
+  const id = variableId ? parseInt(variableId, 10) : NaN;
+  const variable = useSelector((state) => (Number.isNaN(id) ? null : selectVariableById(state, id)));
+  const status = useSelector(selectVariablesStatus);
+  const message = useSelector(selectVariablesMessage);
+  const error = useSelector(selectVariablesError);
 
   useEffect(() => {
-    let cancelled = false;
-    const id = variableId ? parseInt(variableId, 10) : NaN;
-    if (Number.isNaN(id)) {
-      setVariable(null);
-      setLoading(false);
-      return;
+    if (!Number.isNaN(id)) {
+      dispatch(fetchVehicleVariables());
     }
-    setLoading(true);
-    getVehicleVariableList()
-      .then((data) => {
-        if (!cancelled) {
-          setMessage(data.Message || null);
-          const found = (data.Results || []).find((v) => v.ID === id);
-          setVariable(found ?? null);
-        }
-      })
-      .catch((err) => {
-        if (!cancelled) setMessage(err.message || 'Помилка завантаження');
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, [variableId]);
+  }, [dispatch, id]);
 
-  if (loading) {
+  if (status === 'loading') {
     return (
       <article className="variable-detail">
         <p>Завантаження…</p>
@@ -42,7 +32,16 @@ export default function VariableDetailPage() {
     );
   }
 
-  if (!variable) {
+  if (error) {
+    return (
+      <article className="variable-detail">
+        <p className="form-error" role="alert">{error}</p>
+        <Link to="/variables">Назад до списку змінних</Link>
+      </article>
+    );
+  }
+
+  if (Number.isNaN(id) || !variable) {
     return (
       <article className="variable-detail">
         <p>Змінну не знайдено.</p>

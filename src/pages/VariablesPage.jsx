@@ -1,58 +1,94 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { getVehicleVariableList } from '../api/vinApi';
+import { useDispatch, useSelector } from 'react-redux';
+import Pagination from '../components/Pagination';
+import {
+  fetchVehicleVariables,
+  selectVariablesError,
+  selectVariablesList,
+  selectVariablesMessage,
+  selectVariablesPage,
+  selectVariablesStatus,
+  setVariablesPage,
+} from '../store/variablesSlice';
 
 function stripHtml(html) {
   return String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 export default function VariablesPage() {
-  const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
+  const list = useSelector(selectVariablesList);
+  const status = useSelector(selectVariablesStatus);
+  const message = useSelector(selectVariablesMessage);
+  const error = useSelector(selectVariablesError);
+  const storedPage = useSelector(selectVariablesPage);
+
+  const pageSize = 25;
 
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    getVehicleVariableList()
-      .then((data) => {
-        if (!cancelled) {
-          setMessage(data.Message || null);
-          setList(data.Results || []);
-        }
-      })
-      .catch((err) => {
-        if (!cancelled) setMessage(err.message || 'Помилка завантаження');
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, []);
+    dispatch(fetchVehicleVariables());
+  }, [dispatch]);
+
+  const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
+
+  const page = useMemo(() => {
+    const p = Math.trunc(storedPage);
+    if (p < 1) return 1;
+    if (p > totalPages) return totalPages;
+    return p;
+  }, [storedPage, totalPages]);
+
+  const pageItems = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return list.slice(start, start + pageSize);
+  }, [list, page]);
+
+  const handlePageChange = (nextPage) => {
+    dispatch(setVariablesPage(nextPage));
+  };
 
   return (
     <article className="variables-page">
       <h1>Список змінних</h1>
       {message && <p className="api-message" role="status">{message}</p>}
-      {loading ? (
+      {error && <p className="form-error" role="alert">{error}</p>}
+      {status === 'loading' ? (
         <p>Завантаження…</p>
       ) : (
-        <ul className="variables-list">
-          {list.map((v) => (
-            <li key={v.ID}>
-              <div className="variable-list-head">
-                <Link to={`/variables/${v.ID}`}>{v.Name}</Link>
-                {v.GroupName && <span className="variable-group">{v.GroupName}</span>}
-              </div>
-              {v.Description && (
-                <p className="variable-list-desc" aria-hidden="true">
-                  {stripHtml(v.Description).slice(0, 120)}
-                  {stripHtml(v.Description).length > 120 ? '…' : ''}
-                </p>
-              )}
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="variables-list">
+            {pageItems.map((v) => (
+              <li key={v.ID}>
+                <div className="variable-list-head">
+                  <Link to={`/variables/${v.ID}`}>{v.Name}</Link>
+                  {v.GroupName && <span className="variable-group">{v.GroupName}</span>}
+                </div>
+                {v.Description && (
+                  <p className="variable-list-desc" aria-hidden="true">
+                    {stripHtml(v.Description).slice(0, 120)}
+                    {stripHtml(v.Description).length > 120 ? '…' : ''}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          <div className="variables-pagination-wrap">
+            <p className="variables-page-meta" aria-live="polite">
+              Показано {(list.length === 0 ? 0 : (page - 1) * pageSize + 1)}
+              –
+              {Math.min(page * pageSize, list.length)} з {list.length}
+            </p>
+
+            <Pagination
+              total={list.length}
+              limit={pageSize}
+              currentPage={page}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </>
       )}
     </article>
   );
