@@ -72,15 +72,16 @@ export default function HomePage() {
   };
 
   return (
-    <article className="home">
-      <h1>Розшифровка VIN</h1>
+    <article className="home-page">
+      <h1 className="home-page__title">Розшифровка VIN</h1>
 
-      <section className="vin-form-section" aria-labelledby="vin-form-heading">
-        <h2 id="vin-form-heading">Введіть VIN-код</h2>
-        <form onSubmit={handleSubmit} className="vin-form" noValidate>
-          <label htmlFor="vin-input">VIN (до 17 символів)</label>
+      <section className="home-page__section" aria-labelledby="vin-form-heading">
+        <h2 id="vin-form-heading" className="home-page__subtitle">Введіть VIN-код</h2>
+        <form onSubmit={handleSubmit} className="home-page__form" noValidate>
+          <label htmlFor="vin-input" className="home-page__label">VIN (до 17 символів)</label>
           <input
             id="vin-input"
+            className="home-page__input"
             type="text"
             value={vin}
             onChange={(e) => setVin(e.target.value)}
@@ -91,33 +92,33 @@ export default function HomePage() {
             aria-invalid={!!validationError}
             aria-describedby={validationError ? 'vin-error' : undefined}
           />
-          <div className="vin-form-messages" aria-live="polite">
+          <div className="home-page__messages" aria-live="polite">
             {validationError && (
-              <p id="vin-error" className="form-error" role="alert">
+              <p id="vin-error" className="notice notice--error" role="alert">
                 {validationError}
               </p>
             )}
             {apiMessage && (
-              <p className="api-message" role="status">
+              <p className="notice notice--muted" role="status">
                 {apiMessage}
               </p>
             )}
           </div>
-          <button type="submit" disabled={loading}>
+          <button type="submit" className="home-page__submit" disabled={loading}>
             {loading ? 'Завантаження…' : 'Розшифрувати'}
           </button>
         </form>
       </section>
 
       {history.length > 0 && (
-        <section className="history-section" aria-labelledby="history-heading">
-          <h2 id="history-heading">Останні розшифровані коди</h2>
-          <ul className="history-list">
+        <section className="home-page__section" aria-labelledby="history-heading">
+          <h2 id="history-heading" className="home-page__subtitle">Останні розшифровані коди</h2>
+          <ul className="home-page__history">
             {history.map((entry, index) => (
               <li key={`${entry.vin}-${index}`}>
                 <button
                   type="button"
-                  className="history-item"
+                  className="home-page__history-button"
                   onClick={() => showHistoryResult(entry)}
                 >
                   {entry.vin}
@@ -129,13 +130,13 @@ export default function HomePage() {
       )}
 
       {results && (
-        <section className="results-section" aria-labelledby="results-heading">
-          <h2 id="results-heading">Результати розшифровки</h2>
-          <dl className="results-list">
+        <section className="home-page__section home-page__section--results" aria-labelledby="results-heading">
+          <h2 id="results-heading" className="home-page__subtitle">Результати розшифровки</h2>
+          <dl className="home-page__results">
             {results.map((item, index) => (
-              <div key={item.VariableId ?? index} className="result-row">
-                <dt>{item.Variable}</dt>
-                <dd>{item.Value}</dd>
+              <div key={item.VariableId ?? index} className="home-page__result">
+                <dt className="home-page__result-name">{item.Variable}</dt>
+                <dd className="home-page__result-value">{item.Value}</dd>
               </div>
             ))}
           </dl>

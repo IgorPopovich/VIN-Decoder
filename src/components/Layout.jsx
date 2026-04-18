@@ -21,17 +21,25 @@ export default function Layout() {
     prevPathRef.current = nextPath;
   }, [dispatch, location.pathname]);
 
+  const brandLinkClass = ({ isActive }) =>
+    ['layout__link', 'layout__link--brand', isActive && 'layout__link--active'].filter(Boolean).join(' ');
+
+  const variablesLinkClass = ({ isActive }) =>
+    ['layout__link', 'layout__link--variables', isActive && 'layout__link--active'].filter(Boolean).join(' ');
+
   return (
     <div className="layout">
-      <header className="layout-header">
-        <nav className="layout-nav" aria-label="Головна навігація">
-          <NavLink to="/" className="layout-brand" end>
+      <header className="layout__header">
+        <nav className="layout__nav" aria-label="Головна навігація">
+          <NavLink to="/" className={brandLinkClass} end>
             VIN Decoder
           </NavLink>
-          <NavLink className="variables-nav" to="/variables">Змінні</NavLink>
+          <NavLink to="/variables" className={variablesLinkClass}>
+            Змінні
+          </NavLink>
         </nav>
       </header>
-      <main className="layout-main">
+      <main className="layout__main">
         <Outlet />
       </main>
     </div>

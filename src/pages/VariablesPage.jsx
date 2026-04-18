@@ -49,23 +49,23 @@ export default function VariablesPage() {
   };
 
   return (
-    <article className="variables-page">
-      <h1>Список змінних</h1>
-      {message && <p className="api-message" role="status">{message}</p>}
-      {error && <p className="form-error" role="alert">{error}</p>}
+    <article className="variables-page" id="scrollIntoTop">
+      <h1 className="variables-page__title">Список змінних</h1>
+      {message && <p className="notice notice--muted" role="status">{message}</p>}
+      {error && <p className="notice notice--error" role="alert">{error}</p>}
       {status === 'loading' ? (
-        <p>Завантаження…</p>
+        <p className="variables-page__loading">Завантаження…</p>
       ) : (
         <>
-          <ul className="variables-list">
+          <ul className="variables-page__list">
             {pageItems.map((v) => (
-              <li key={v.ID}>
-                <div className="variable-list-head">
-                  <Link to={`/variables/${v.ID}`}>{v.Name}</Link>
-                  {v.GroupName && <span className="variable-group">{v.GroupName}</span>}
+              <li key={v.ID} className="variables-page__item">
+                <div className="variables-page__item-head">
+                  <Link className="variables-page__link" to={`/variables/${v.ID}`}>{v.Name}</Link>
+                  {v.GroupName && <span className="variables-page__item-group">{v.GroupName}</span>}
                 </div>
                 {v.Description && (
-                  <p className="variable-list-desc" aria-hidden="true">
+                  <p className="variables-page__item-desc" aria-hidden="true">
                     {stripHtml(v.Description).slice(0, 120)}
                     {stripHtml(v.Description).length > 120 ? '…' : ''}
                   </p>
@@ -74,8 +74,8 @@ export default function VariablesPage() {
             ))}
           </ul>
 
-          <div className="variables-pagination-wrap">
-            <p className="variables-page-meta" aria-live="polite">
+          <div className="variables-page__pagination">
+            <p className="variables-page__meta" aria-live="polite">
               Показано {(list.length === 0 ? 0 : (page - 1) * pageSize + 1)}
               –
               {Math.min(page * pageSize, list.length)} з {list.length}

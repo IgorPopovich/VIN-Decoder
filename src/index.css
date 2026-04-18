@@ -76,11 +76,11 @@ a:hover {
 
 /* 420px–1440px: елементи не злипаються */
 @media (max-width: 480px) {
-  .layout-main {
+  .layout__main {
     padding: 12px;
   }
 
-  .result-row {
+  .home-page__result {
     grid-template-columns: 1fr;
     gap: 4px;
   }

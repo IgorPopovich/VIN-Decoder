@@ -79,25 +79,25 @@ export default function Pagination({
   if (Number(total) <= Number(limit)) return null;
 
   return (
-    <div className="pagination-wrapper" role="navigation" aria-label={ariaLabel}>
-      <div className="pagination">
+    <div className="pagination" role="navigation" aria-label={ariaLabel}>
+      <div className="pagination__inner">
         <button
           type="button"
-          className={`pag-item pag-item-icon ${safeCurrentPage === 1 ? 'not-allowed-page' : ''}`}
+          className="pagination__btn pagination__btn--icon"
           disabled={safeCurrentPage === 1}
           onClick={() => setPage(1)}
           aria-label="Перша сторінка"
         >
-          <span>«</span>
+          <span className="pagination__icon">«</span>
         </button>
         <button
           type="button"
-          className={`pag-item pag-item-icon ${safeCurrentPage === 1 ? 'not-allowed-page' : ''}`}
+          className="pagination__btn pagination__btn--icon"
           disabled={safeCurrentPage === 1}
           onClick={() => setPage(safeCurrentPage - 1)}
           aria-label="Попередня сторінка"
         >
-          <span>‹</span>
+          <span className="pagination__icon">‹</span>
         </button>
 
         {visiblePages.map((p, idx) => (
@@ -105,8 +105,8 @@ export default function Pagination({
             key={`${String(p)}-${idx}`}
             type="button"
             className={[
-              'pag-item',
-              p === safeCurrentPage ? 'active-page not-allowed-page' : '',
+              'pagination__btn',
+              p === safeCurrentPage ? 'pagination__btn--current' : '',
             ].join(' ').trim()}
             disabled={p === safeCurrentPage}
             onClick={() => setPage(p)}
@@ -117,24 +117,23 @@ export default function Pagination({
 
         <button
           type="button"
-          className={`pag-item pag-item-icon ${safeCurrentPage === safePagesCount ? 'not-allowed-page' : ''}`}
+          className="pagination__btn pagination__btn--icon"
           disabled={safeCurrentPage === safePagesCount}
           onClick={() => setPage(safeCurrentPage + 1)}
           aria-label="Наступна сторінка"
         >
-          <span>›</span>
+          <span className="pagination__icon">›</span>
         </button>
         <button
           type="button"
-          className={`pag-item pag-item-icon ${safeCurrentPage === safePagesCount ? 'not-allowed-page' : ''}`}
+          className="pagination__btn pagination__btn--icon"
           disabled={safeCurrentPage === safePagesCount}
           onClick={() => setPage(safePagesCount)}
           aria-label="Остання сторінка"
         >
-          <span>»</span>
+          <span className="pagination__icon">»</span>
         </button>
       </div>
     </div>
   );
 }
-

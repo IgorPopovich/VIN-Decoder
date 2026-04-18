@@ -27,7 +27,7 @@ export default function VariableDetailPage() {
   if (status === 'loading') {
     return (
       <article className="variable-detail">
-        <p>Завантаження…</p>
+        <p className="variable-detail__loading">Завантаження…</p>
       </article>
     );
   }
@@ -35,8 +35,8 @@ export default function VariableDetailPage() {
   if (error) {
     return (
       <article className="variable-detail">
-        <p className="form-error" role="alert">{error}</p>
-        <Link to="/variables">Назад до списку змінних</Link>
+        <p className="notice notice--error" role="alert">{error}</p>
+        <Link className="variable-detail__back" to="/variables">Назад до списку змінних</Link>
       </article>
     );
   }
@@ -44,32 +44,32 @@ export default function VariableDetailPage() {
   if (Number.isNaN(id) || !variable) {
     return (
       <article className="variable-detail">
-        <p>Змінну не знайдено.</p>
-        <Link to="/variables">Назад до списку змінних</Link>
+        <p className="variable-detail__empty">Змінну не знайдено.</p>
+        <Link className="variable-detail__back" to="/variables">Назад до списку змінних</Link>
       </article>
     );
   }
 
   return (
     <article className="variable-detail">
-      <nav aria-label="Хлібні крихти">
+      <nav className="variable-detail__breadcrumbs" aria-label="Хлібні крихти">
         <Link to="/variables">Змінні</Link>
-        <span className="breadcrumb-sep"> / </span>
+        <span className="variable-detail__breadcrumb-sep"> / </span>
         <span>{variable.Name}</span>
       </nav>
-      {message && <p className="api-message" role="status">{message}</p>}
-      <h1>{variable.Name}</h1>
+      {message && <p className="notice notice--muted" role="status">{message}</p>}
+      <h1 className="variable-detail__title">{variable.Name}</h1>
       {variable.GroupName && (
-        <p className="variable-meta"><strong>Група:</strong> {variable.GroupName}</p>
+        <p className="variable-detail__meta"><strong>Група:</strong> {variable.GroupName}</p>
       )}
       {variable.DataType && (
-        <p className="variable-meta"><strong>Тип даних:</strong> {variable.DataType}</p>
+        <p className="variable-detail__meta"><strong>Тип даних:</strong> {variable.DataType}</p>
       )}
       <div
-        className="variable-description"
+        className="variable-detail__body"
         dangerouslySetInnerHTML={{ __html: variable.Description || '—' }}
       />
-      <Link to="/variables" className="back-link">← Назад до списку змінних</Link>
+      <Link to="/variables" className="variable-detail__back">← Назад до списку змінних</Link>
     </article>
   );
 }

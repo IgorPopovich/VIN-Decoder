@@ -13,7 +13,14 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route path="variables" element={<VariablesPage />} />
           <Route path="variables/:variableId" element={<VariableDetailPage />} />
-          <Route path="*" element={<p>Такої вкладки немає.</p>} />
+          <Route
+            path="*"
+            element={(
+              <div className="not-found">
+                <p className="not-found__message">Такої вкладки немає.</p>
+              </div>
+            )}
+          />
         </Route>
       </Routes>
     </HashRouter>
