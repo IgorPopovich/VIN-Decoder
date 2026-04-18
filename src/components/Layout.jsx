@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearVariables } from '../store/variablesSlice';
+import { clearVariablesListPageStorage } from '../utils/variablesListPageStorage';
 
 export default function Layout() {
   const dispatch = useDispatch();
@@ -16,6 +17,11 @@ export default function Layout() {
 
     if (wasInVariables && !isInVariables) {
       dispatch(clearVariables());
+    }
+
+    const navigatedToHome = nextPath === '/' || nextPath === '';
+    if (wasInVariables && navigatedToHome) {
+      clearVariablesListPageStorage();
     }
 
     prevPathRef.current = nextPath;

@@ -11,6 +11,10 @@ import {
   selectVariablesStatus,
   setVariablesPage,
 } from '../store/variablesSlice';
+import {
+  readVariablesListPage,
+  writeVariablesListPage,
+} from '../utils/variablesListPageStorage';
 
 function stripHtml(html) {
   return String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -32,6 +36,19 @@ export default function VariablesPage() {
 
   const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
 
+  useEffect(() => {
+    if (status !== 'succeeded') return;
+    const saved = readVariablesListPage();
+    if (saved == null) return;
+    const clamped = Math.min(Math.max(1, saved), totalPages);
+    if (clamped !== storedPage) {
+      dispatch(setVariablesPage(clamped));
+    }
+    if (clamped !== saved) {
+      writeVariablesListPage(clamped);
+    }
+  }, [dispatch, list.length, status, storedPage, totalPages]);
+
   const page = useMemo(() => {
     const p = Math.trunc(storedPage);
     if (p < 1) return 1;
@@ -46,6 +63,7 @@ export default function VariablesPage() {
 
   const handlePageChange = (nextPage) => {
     dispatch(setVariablesPage(nextPage));
+    writeVariablesListPage(nextPage);
   };
 
   return (
